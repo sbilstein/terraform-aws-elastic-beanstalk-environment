@@ -343,54 +343,66 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   tags = "${module.label.tags}"
 
+  # Node settings
+
+  setting {
+    namespace = "aws:elasticbeanstalk:container:nodejs"
+    name      = "NodeVersion"
+    value     = "8.10.0"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:container:nodejs"
+    name      = "GzipCompression"
+    value     = "true"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:container:nodejs"
+    name      = "NodeCommand"
+    value     = "node app.js"
+  }
+
+  # All other settings
+
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = "${var.vpc_id}"
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
     value     = "${var.associate_public_ip_address}"
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = "${join(",", var.private_subnets)}"
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "ELBSubnets"
     value     = "${join(",", var.public_subnets)}"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"
     value     = "true"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateType"
     value     = "${var.rolling_update_type}"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MinInstancesInService"
     value     = "${var.updating_min_in_service}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
     value     = "${var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"}"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MaxBatchSize"
