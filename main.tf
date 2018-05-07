@@ -281,21 +281,6 @@ data "aws_iam_policy_document" "default" {
 
     effect = "Allow"
   }
-
-  statement {
-    sid = "AllowCloudformationOperationsOnElasticBeanstalkStacks"
-
-    actions = [
-      "cloudformation:*",
-    ]
-
-    resources = [
-      "arn:aws:cloudformation:*:*:stack/awseb-*",
-      "arn:aws:cloudformation:*:*:stack/eb-*",
-    ]
-
-    effect = "Allow"
-  }
 }
 
 resource "aws_iam_instance_profile" "ec2" {
@@ -660,7 +645,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 0))), 0)}"
     value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 0))), 0), var.env_default_value)}"
   }
- 
   ###===================== Application Load Balancer Health check settings =====================================================###
   # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
   # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
